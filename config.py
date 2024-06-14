@@ -1,9 +1,11 @@
-class DevConfig():
+import os
 
-  MONGODB_SETTINGS = {
-      'db': 'users',
-      'host': 'mongodb',
-      'username': 'admin',
-      'password': 'admin'
-  }
-  
+
+class DevConfig:
+
+    MONGODB_SETTINGS = {
+        'db': os.getenv('MONGODB_DB'),
+        'host': os.getenv('MONGODB_HOST'),
+        'username': os.getenv('MONGODB_USERNAME'),
+        'password': os.getenv('MONGODB_PASSWORD')
+    }
