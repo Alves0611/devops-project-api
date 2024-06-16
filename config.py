@@ -10,7 +10,7 @@ class DevConfig:
     }
 
 
-class ProdConfig: 
+class ProdConfig:
     MONGODB_USER = os.getenv('MONGODB_USER')
     MONGODB_PASSWORD = os.getenv('MONGODB_PASSWORD')
     MONGODB_HOST = os.getenv('MONGODB_HOST')
