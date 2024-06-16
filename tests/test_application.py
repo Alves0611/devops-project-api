@@ -3,7 +3,6 @@ from application import create_app
 
 
 class TestApplication():
-
     @pytest.fixture
     def client(self):
         app = create_app('config.MockConfig')
@@ -12,20 +11,20 @@ class TestApplication():
     @pytest.fixture
     def valid_user(self):
         return {
-            "first_name": "Mateus",
-            "last_name": "Muller",
-            "cpf": "641.396.500-28",
-            "email": "contato@mateusmuller.me",
+            "first_name": "Gabriel",
+            "last_name": "Alves",
+            "cpf": "123.456.789-09",  # CPF formatado corretamente
+            "email": "contato@gabriel.me",
             "birth_date": "1996-09-10"
         }
 
     @pytest.fixture
     def invalid_user(self):
         return {
-            "first_name": "Mateus",
-            "last_name": "Muller",
-            "cpf": "641.396.500-27",
-            "email": "contato@mateusmuller.me",
+            "first_name": "Gabriel",
+            "last_name": "Alves",
+            "cpf": "123.456.789-00",  # CPF inválido
+            "email": "contato@gabriel.me",
             "birth_date": "1996-09-10"
         }
 
@@ -45,10 +44,10 @@ class TestApplication():
     def test_get_user(self, client, valid_user, invalid_user):
         response = client.get('/user/%s' % valid_user["cpf"])
         assert response.status_code == 200
-        assert response.json[0]["first_name"] == "Mateus"
-        assert response.json[0]["last_name"] == "Muller"
-        assert response.json[0]["cpf"] == "641.396.500-28"
-        assert response.json[0]["email"] == "contato@mateusmuller.me"
+        assert response.json[0]["first_name"] == "Gabriel"
+        assert response.json[0]["last_name"] == "Alves"
+        assert response.json[0]["cpf"] == "123.456.789-09"
+        assert response.json[0]["email"] == "contato@gabriel.me"
 
         birth_date = response.json[0]["birth_date"]["$date"]
         assert birth_date == "1996-09-10T00:00:00Z"
@@ -58,15 +57,15 @@ class TestApplication():
         assert b"User does not exist in database!" in response.data
 
     def test_patch_user(self, client, valid_user):
-        valid_user["first_name"] = "Matheus"
+        valid_user["first_name"] = "Gabriel"
         response = client.patch("/user", json=valid_user)
         assert response.status_code == 200
         assert b"updated" in response.data
 
-        valid_user["cpf"] = "199.624.120-64"
+        valid_user["cpf"] = "123.456.789-00"
         response = client.patch("/user", json=valid_user)
         assert response.status_code == 400
-        assert b"does not exist in database" in response.data
+        assert b"CPF is invalid!" in response.data
 
     def test_delete_user(self, client, valid_user):
         response = client.delete("/user/%s" % valid_user["cpf"])
