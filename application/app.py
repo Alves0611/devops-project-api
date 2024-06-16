@@ -34,8 +34,7 @@ _user_parser.add_argument('birth_date',
 
 class Users(Resource):
     def get(self):
-        users = UserModel.objects()
-        return jsonify(users.to_json())
+        return jsonify(UserModel.objects())
 
 
 class User(Resource):
